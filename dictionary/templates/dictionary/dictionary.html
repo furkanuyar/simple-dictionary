@@ -33,14 +33,3 @@
 {% endblock %}
 
 
-    URL = SEARCH_TWEET_URL.format(query, page)
-    resp = requests.get(url=URL, auth=oauth)
-    if not resp.status_code == 200:
-        send_e_mail('PROBLEM:{}'.format(resp.json()))
-        print resp.json()
-        break
-    for obj in resp.json()['statuses']:
-        if 75 < obj['user']['followers_count'] < 300 and obj['user'][
-            'screen_name'] not in follow_list:
-            return obj['user']['screen_name'],query
-    page += 1

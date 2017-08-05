@@ -1,0 +1,46 @@
+{% extends 'dictionary/base.html' %}
+{% load staticfiles%}
+
+{% block content%}
+<form method="POST" class="post-form">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="save btn btn-info">Search</button>
+</form>
+
+
+{% if method == 'POST' and not cond %}
+<div class="no-result">
+    <h3>Unfortunately, there is no result. Please try again.</h3>
+</div>
+{% endif %}
+
+{% if words %}
+<table>
+    <tr>
+        <th>WORD</th>
+        <th>TYPE</th>
+        <th>MEANING</th>
+    </tr>
+    {% for word in words %}
+    <tr>
+        <th> {{ word.name }}</th>
+        <th> {{ word.type }}</th>
+        <th> {{ word.meaning }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
+
+
+    URL = SEARCH_TWEET_URL.format(query, page)
+    resp = requests.get(url=URL, auth=oauth)
+    if not resp.status_code == 200:
+        send_e_mail('PROBLEM:{}'.format(resp.json()))
+        print resp.json()
+        break
+    for obj in resp.json()['statuses']:
+        if 75 < obj['user']['followers_count'] < 300 and obj['user'][
+            'screen_name'] not in follow_list:
+            return obj['user']['screen_name'],query
+    page += 1

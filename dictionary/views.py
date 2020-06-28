@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Word
 from .forms import DictionaryForm
+from ratelimit.decorators import ratelimit
 
 
+@ratelimit(key='ip', rate='8/m', block=True)
 def get_results(request):
     words = []
     cond = False

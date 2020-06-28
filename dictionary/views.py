@@ -3,7 +3,7 @@ from .models import Word
 from .forms import DictionaryForm
 
 
-def dictionary(request):
+def get_results(request):
     words = []
     cond = False
     if request.method == "POST":
@@ -13,6 +13,7 @@ def dictionary(request):
             words = Word.objects.filter(name=word.lower())
             cond = bool(words)
     form = DictionaryForm()
+
     return render(request, 'dictionary/dictionary.html', {'form': form,
                                                           'words': words,
                                                           'cond': cond,
